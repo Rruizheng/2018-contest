@@ -1,0 +1,95 @@
+/*清除浮动*/
+.clearfloat:after{
+	content: "";
+	height: 0;
+	visibility: hidden;
+	display: block;
+	clear: both;
+}
+
+body{
+	background:rgb(250,248,239) ;
+}
+html{
+	font-size: 50px;
+	overflow: hidden;
+}
+header{
+	height: 3rem;
+	width: 8.8rem;
+	margin: 0 auto;
+	margin-top: 3rem;
+	
+	box-sizing: border-box;
+	padding: 0 0.6rem;
+}
+.wrapper{
+	position: relative;
+	height: 8.8rem;
+	width: 8.8rem;
+	margin: 0 auto;
+	background: rgb(187,173,160);
+	border-radius: 0.2rem;
+	padding: 0.1rem;
+	/*grid布局
+	 * display: grid;
+	grid-template-columns:25% 25% 25% 25% ;
+	grid-template-rows: 25% 25% 25% 25% ;*/
+}
+/**************header**************/
+header h1{
+	font-size: 2rem;
+	font-family: "times new roman";
+	color:  rgb(119,110,101);
+	height: 2rem;
+	line-height: 2rem;
+	display: inline-block;
+	margin-top: 0.3rem;
+}
+header .right{
+	float: right;
+	margin-top: 0.2rem;
+	width: 2rem;
+}
+header button{
+	background: rgb(143,122,102);
+	color: #FFF;
+	font-size: 0.32rem;
+	font-weight: 700;
+	border: 0;
+	width: 2.5rem;
+	height:  24px;
+	line-height: 24px;
+	border-radius: 0.1rem;	
+}
+header p{
+	background: rgb(187,173,160);
+	color: rgb(238,228,207);
+	font-weight: 700;
+	line-height: 25px;
+	margin-top: 0.3rem;
+	width: 2.5rem;
+	height: 50px;
+	font-size: 8px;
+	border-radius: 5px;
+	text-align: center;
+}
+header p span{
+	color: #FFF;
+	font-size: 20px;
+}
+
+.grid-cell{
+	width: 2rem;
+	height: 2rem;
+	line-height: 2rem;
+	display: inline-block;
+	margin: 0.1rem;
+	border-radius: 0.2rem;
+	background: rgb(205,193,180);
+	position: absolute;
+	text-align: center;
+	
+}
+
+
