@@ -12,7 +12,6 @@ body{
 }
 html{
 	font-size: 50px;
-	overflow: hidden;
 }
 header{
 	height: 3rem;
@@ -36,6 +35,47 @@ header{
 	grid-template-columns:25% 25% 25% 25% ;
 	grid-template-rows: 25% 25% 25% 25% ;*/
 }
+/*结束遮罩*/
+	.cover{
+		display: none;
+		position: absolute;
+		height: 8.8rem;
+		width: 8.8rem;
+		background: rgba(255,255,255,0.3);	
+	}
+	.cover span{
+		position:absolute;
+		color: rgb(255,102,102);
+		font-weight: 700;
+		font-size: 1rem;
+		height: 1.2rem;
+		line-height: 1.2rem;
+		width: 6rem;
+		top: 25%;
+		left: calc(50% - 3rem);
+		text-align: center;
+	}
+	.cover button{
+		
+		padding: 0 10px;
+		position: absolute;
+		top: 60%;
+		background: rgb(143,122,102);
+		color: #FFF;
+		font-size: 0.32rem;
+		font-weight: 700;
+		border: 0;
+		width: 30%;
+		height:  35px;
+		line-height: 35px;
+		border-radius: 0.1rem;	
+	}
+	.cover :nth-child(2){
+		left: 15%;
+	}
+	.cover :nth-child(3){
+		left: 55%;
+	}
 /**************header**************/
 header h1{
 	font-size: 2rem;
@@ -89,7 +129,24 @@ header p span{
 	background: rgb(205,193,180);
 	position: absolute;
 	text-align: center;
-	
 }
 
+.newGrid{
+	-webkit-animation: newGrid 0.6s 1 ease;
+	-moz-animation: newGrid 0.6s 1 ease;
+	-o-animation: newGrid 0.6s 1 ease;
+}
+
+@-webkit-keyframes newGrid {
+from { -webkit-transform: rotate(0deg) scale(0.3); }
+to { -webkit-transform: rotate(0deg) scale(1); }
+}
+@-moz-keyframes newGrid {
+from { -moz-transform: rotate(0deg) scale(0.3)}
+to { -moz-transform: rotate(0deg) scale(1); }
+}
+@-o-keyframes newGrid {
+from { -o-transform: rotate(0deg) scale(0.3); }
+to { -o-transform: rotate(0deg) scale(1); }
+}
 

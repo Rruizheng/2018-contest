@@ -6,8 +6,9 @@
 	        recalc = function () {
 	
 	            var clientWidth = docEl.clientWidth;
+	            var clientHeight = docEl.clientHeight;
 	            if (!clientWidth) return;
-	            if (clientWidth <= 500) {
+	            if (clientWidth <= 500 || clientHeight <= 600 ) {
 	                docEl.style.fontSize = '30px';
 	            } else {
 	                docEl.style.fontSize = '50px';
@@ -20,7 +21,37 @@
 	    doc.addEventListener('DOMContentLoaded', recalc, false);
 	    /*DOMContentLoaded文档加载完成不包含图片资源 onload包含图片资源*/
 	})(document, window);
-		
+	
+	function addClass(obj,className){
+		if(obj.className === ""){
+			obj.className = className;
+		}else{
+			var _index = classIndexOf(obj,className);
+			if(_index === -1){
+				obj.className += " " + className;
+			}
+		}
+	}
+	function removeClass(obj,className){
+		if(obj.className !== ""){
+			var arrClassName = obj.className.split(" ");
+			var _index = classIndexOf(obj,className);
+			if(_index !== -1){
+				arrClassName.splice(_index,1);
+			}
+			obj.className = arrClassName.join(" ");
+		}
+	}
+	function classIndexOf(obj,v){
+		var arrClassName = obj.className.split(" ");
+		for(var i=0;i<arrClassName.length;i++){
+			if(arrClassName[i] === v){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	var cellStyle = {
 		cell2:{
 			color:'#776e65',
@@ -81,7 +112,12 @@
 	var cells = document.getElementsByClassName("grid-cell");
 	var startBtn = document.getElementById("startGame");
 	var box = new Array();  //储存游戏数据
-	
+	var cover = document.getElementsByClassName("cover")[0];
+	var endword = document.getElementById("end");
+	var replay = document.getElementById("rePlay");
+	var cancel = document.getElementById("cancel");
+	var play = true;
+	var body = document.body;
 	
 	function main(){
 		init();
@@ -113,52 +149,92 @@
 		startBtn.onclick = start;
 		//判断键盘操作
 		var irule;//up,down,left,right
-		document.onkeyup = function(event){
+		
+		document.onkeydown = function(event){
 			var event = event || window.event;
 			var code = event.keyCode;
-			rules(code);
+			if(play){
+				rules(code);
+			}
+			/*cellNum(randomcell(),2);*/
+			//判断游戏是否结束
+			document.onkeyup = function(){
+				isEnd();
+			}
+			body.ontouchstart=function(){
+				rules(moveDir())
+			};
+			return false;
 		}
+		
+		
 		//todo判断触屏操作
-		
-		
 
-		//滑动屏幕，更新界面
-
-		
-		//判断游戏是否结束
-		if(nospace()){
-			alert("游戏结束！");
+	}
+	
+	//移动端判断滑动方向
+	function moveDir(){
+		var startX,startY,endX,endY,disX,disY;
+		body.ontouchstart = function(event){
+			var event = event || window.event;
+			event.preventDefault();
+			startX = event.targetTouches[0].pageX;
+			startY = event.targetTouches[0].pageY;
 		}
-		
-		for(var i=0;i<4;i++){
-			for(var j=0;j<4;j++){
-				if(box[i][j] == 2048){
-					alert("游戏结束！");
-					break;
-				}
+		body.ontouchend = function(event){
+			var event = event || window.event;
+			event.preventDefault();
+			endX = event.targetTouches[0].pageX;
+			endY = event.targetTouches[0].pageY;
+			disX = endX - startX;
+			disY = endY - startY;
+			if(Math.abs(disX) > Math.abs(disY) && disX>0){
+				return 39;
+			}
+			else if(Math.abs(disX) > Math.abs(disY) && disX<0){
+				return 37;
+			}
+			if(Math.abs(disX) < Math.abs(disY) && disY>0){
+				return 40;
+			}
+			if(Math.abs(disX) < Math.abs(disY) && disY<0){
+				return 38;
 			}
 		}
 	}
 	
 	
-	
 	//游戏规则
 	var rules = function(code){
 		//判断是哪一种情况
+		var  isNew = true;
 		switch(code){
 			case 37:
 				moveleft();
+				if(isNew){
+					cellNum(randomcell(),2);
+				}
 				break;
 			case 38:
 				moveup();
+				if(isNew){
+					cellNum(randomcell(),2);
+				}
 				break;
 			case 39:
 				moveright();
+				if(isNew){
+					cellNum(randomcell(),2);
+				}
 				break;
 			case 40:
 				movedown();
+				if(isNew){
+					cellNum(randomcell(),2);
+				}
 				break;
 		}
+		
 		
 		//上移
 		function moveup(){	
@@ -173,11 +249,7 @@
 					}
 				}
 			}
-			for(var i=0;i<4;i++){
-				for(var j=0;j<4;j++){
-					box[i][j] = 0;	
-				}
-			}	
+				
 			//向上。相同数据相加
 			for(var j=0;j<4;j++){
 				for(var i=0;i<4;i++){
@@ -194,6 +266,14 @@
 						}
 					
 					}
+				}
+			}
+			if(reI.toString() == box.toString()){
+				isNew = false;
+			}
+			for(var i=0;i<4;i++){
+				for(var j=0;j<4;j++){
+					box[i][j] = 0;	
 				}
 			}
 			//放回格子中
@@ -219,11 +299,7 @@
 					}
 				}
 			}
-			for(var i=0;i<4;i++){
-				for(var j=0;j<4;j++){
-					box[i][j] = 0;	
-				}
-			}	
+				
 			//向←。相同数据相加
 			for(var i=0;i<4;i++){
 				for(var j=0;j<4;j++){
@@ -242,6 +318,15 @@
 					}
 				}
 			}
+			if(reI.toString() == box.toString()){
+				isNew = false;
+			}
+			
+			for(var i=0;i<4;i++){
+				for(var j=0;j<4;j++){
+					box[i][j] = 0;	
+				}
+			}
 			//放回格子中
 			for(var i=0;i<4;i++){
 				for(var j=0;j<4;j++){
@@ -250,7 +335,6 @@
 				}
 			}
 			updateBox();
-			cellNum(randomcell(),2);
 		}
 		
 		//右移
@@ -266,11 +350,7 @@
 					}
 				}
 			}
-			for(var i=0;i<4;i++){
-				for(var j=0;j<4;j++){
-					box[i][j] = 0;	
-				}
-			}	
+			
 			//相同数据相加
 			for(var i=0;i<4;i++){
 				for(var j=3;j>=0;j--){
@@ -289,6 +369,14 @@
 					}
 				}
 			}
+			if(reI.toString() == box.toString()){
+				isNew = false;
+			}
+			for(var i=0;i<4;i++){
+				for(var j=0;j<4;j++){
+					box[i][j] = 0;	
+				}
+			}	
 			//放回格子中
 			for(var i=0;i<4;i++){
 				for(var j=0;j<4;j++){
@@ -312,11 +400,7 @@
 					}
 				}
 			}
-			for(var i=0;i<4;i++){
-				for(var j=0;j<4;j++){
-					box[i][j] = 0;	
-				}
-			}	
+
 			//相同数据相加
 			for(var j=0;j<4;j++){
 				for(var i=3;i>=0;i--){
@@ -335,6 +419,14 @@
 					}
 				}
 			}
+		    if(reI.toString() == box.toString()){
+				isNew = false;
+			}
+			for(var i=0;i<4;i++){
+				for(var j=0;j<4;j++){
+					box[i][j] = 0;	
+				}
+			}	
 			//放回格子中
 			for(var i=0;i<4;i++){
 				for(var j=0;j<4;j++){
@@ -343,17 +435,6 @@
 				}
 			}
 			updateBox();
-		}
-		
-		/*cellNum(randomcell());*/
-		
-		//动画
-		var move = function(){
-			
-		}
-		//合并
-		var add = function(){
-			
 		}
 	}
 	
@@ -376,8 +457,7 @@
 	
 	function randomcell(){
 		//判断是否还有空位	
-		if(nospace()){
-			
+		if(nospace()){	
 			return false;
 		}
 		//选择随机位置，空位,生成数字2
@@ -406,6 +486,7 @@
 		newCell.x = bx;
 		newCell.y = by;
 		box[bx][by] = 2;
+		addClass(newCell,"newGrid");
 		return newCell;	
 	}
 	
@@ -423,7 +504,6 @@
 	
 	//根据box的值，对格子进行渲染
 	function cellNum(cell,num){
-		
 		if(num == 0){
 			cell.innerHTML = "";
 			cell.style.backgroundColor = "rgb(205,193,180)";
@@ -439,10 +519,67 @@
 		var k=0;
 		for(var i=0;i<4;i++){
 			for(var j=0;j<4;j++){
+				removeClass(cells[k],"newGrid");
 				cellNum(cells[k],box[i][j]);
 				k=k+1;
 			}
 		}
+		
+	}
+	
+	function isEnd(){
+		//没有空格，且没有可以合并的格子
+		if(nospace()){
+			var noadd = true;
+			for(var i=0;i<4;i++){
+				if((box[i][0] === box[i][1]) || (box[i][1] === box[i][2]) ||(box[i][2] === box[i][3])){
+					noadd = false;
+				}
+			}
+			for(var j=0;j<4;j++){
+				if((box[0][j] === box[1][j]) || (box[1][j] === box[2][j]) ||(box[2][j] === box[3][j])){
+					noadd = false;
+				}
+			}
+			if(noadd){
+				/*var replay = confirm("游戏结束！是否重新开始？");
+				if(replay){
+					start();
+				}else{
+					return;
+				}	*/
+				cover.style.display="block";
+				end.innerHTML = "游戏结束！"
+				endch();
+			}
+		}
+		
+		for(var i=0;i<cells.length;i++){
+			if(parseInt(cells[i].innerHTML) === 2048){
+				/*var replay = confirm("恭喜你达到2048！是否重新开始？");
+				if(replay){
+					start();
+				}else{
+					return;
+				}	
+				break;*/
+				cover.style.display="block";
+				end.innerHTML = "恭喜你达到</br>2048"
+				endch();
+			}
+		}
+	}
+	function endch(){
+		play = false;
+		replay.onclick=function(){
+			cover.style.display="none";
+			play = true;
+			start();
+		};
+		cancel.onclick = function(){
+			play = true;
+			cover.style.display="none";
+		};
 	}
 	
 	main();
