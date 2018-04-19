@@ -118,6 +118,8 @@
 	var cancel = document.getElementById("cancel");
 	var play = true;
 	var body = document.body;
+	body.style.width = document.documentElement.clientWidth;
+	body.style.height= document.documentElement.clientHeight;
 	
 	function main(){
 		init();
@@ -161,48 +163,45 @@
 			document.onkeyup = function(){
 				isEnd();
 			}
-			body.ontouchstart=function(){
-				rules(moveDir())
-			};
+			
 			return false;
 		}
 		
-		
-		//todo判断触屏操作
-
-	}
-	
-	//移动端判断滑动方向
-	function moveDir(){
+		/*moveDir();*/
+		//移动端
 		var startX,startY,endX,endY,disX,disY;
-		body.ontouchstart = function(event){
-			var event = event || window.event;
-			event.preventDefault();
-			startX = event.targetTouches[0].pageX;
-			startY = event.targetTouches[0].pageY;
-		}
-		body.ontouchend = function(event){
-			var event = event || window.event;
-			event.preventDefault();
-			endX = event.targetTouches[0].pageX;
-			endY = event.targetTouches[0].pageY;
+		
+		document.addEventListener("touchstart",function(e){
+	 		startX = e.targetTouches[0].pageX;
+			startY = e.targetTouches[0].pageY;
+	 		console.log(e);
+		},false);
+		document.addEventListener("touchmove",function(e){
+			e.preventDefault();
+			endX = e.targetTouches[0].pageX;
+			endY = e.targetTouches[0].pageY;
+		},false);
+		document.addEventListener("touchend",function(e){
+			var code;
 			disX = endX - startX;
 			disY = endY - startY;
 			if(Math.abs(disX) > Math.abs(disY) && disX>0){
-				return 39;
+				code = 39;
 			}
 			else if(Math.abs(disX) > Math.abs(disY) && disX<0){
-				return 37;
+				code = 37;
 			}
-			if(Math.abs(disX) < Math.abs(disY) && disY>0){
-				return 40;
+			else if(Math.abs(disX) < Math.abs(disY) && disY>0){
+				code = 40;
 			}
-			if(Math.abs(disX) < Math.abs(disY) && disY<0){
-				return 38;
+			else if(Math.abs(disX) < Math.abs(disY) && disY<0){
+				code = 38;
 			}
-		}
+			if(play){
+				rules(code);
+			}
+		},false);
 	}
-	
 	
 	//游戏规则
 	var rules = function(code){
