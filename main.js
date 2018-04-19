@@ -118,6 +118,9 @@
 	var cancel = document.getElementById("cancel");
 	var play = true;
 	var body = document.body;
+	var score = document.getElementById("score");
+	var iScore = 0;
+	
 	body.style.width = document.documentElement.clientWidth;
 	body.style.height= document.documentElement.clientHeight;
 	
@@ -175,6 +178,7 @@
 	 		startX = e.targetTouches[0].pageX;
 			startY = e.targetTouches[0].pageY;
 	 		console.log(e);
+	 		
 		},false);
 		document.addEventListener("touchmove",function(e){
 			e.preventDefault();
@@ -200,6 +204,7 @@
 			if(play){
 				rules(code);
 			}
+			
 		},false);
 	}
 	
@@ -254,6 +259,7 @@
 				for(var i=0;i<4;i++){
 					if((i<3)&&(reI[i][j] == reI[i+1][j])){
 						reI[i][j] = 2*reI[i][j];
+						iScore = iScore + reI[i][j];
 						reI[i+1][j] = 0;
 						if((i<2)&&reI[i+2][j]){
 							reI[i+1][j] = reI[i+2][j];
@@ -304,6 +310,7 @@
 				for(var j=0;j<4;j++){
 					if(reI[i][j] == reI[i][j+1]){
 						reI[i][j] = 2*reI[i][j];
+						iScore = iScore + reI[i][j];
 						reI[i][j+1] = 0;
 						if(reI[i][j+2]){
 							reI[i][j+1] = reI[i][j+2];
@@ -355,6 +362,7 @@
 				for(var j=3;j>=0;j--){
 					if((j>0)&&(reI[i][j] == reI[i][j-1])){
 						reI[i][j] = 2*reI[i][j];
+						iScore = iScore + reI[i][j];
 						reI[i][j-1] = 0;
 						if((j>1)&&reI[i][j-2]){
 							reI[i][j-1] = reI[i][j-2];
@@ -405,6 +413,7 @@
 				for(var i=3;i>=0;i--){
 					if((i>0)&&(reI[i][j] == reI[i-1][j])){
 						reI[i][j] = 2*reI[i][j];
+						iScore = iScore + reI[i][j];
 						reI[i-1][j] = 0;
 						if((i>1)&&reI[i-2][j]){
 							reI[i-1][j] = reI[i-2][j];
@@ -440,6 +449,8 @@
 	function start(){
 		//开始游戏，清空屏幕所有值，随机两个位置，产生两个2
 		//todo中途停止，弹出警告
+		iScore = 0;
+		calScore();
 		for(var i=0;i<cells.length;i++){
 			cells[i].innerHTML = "";
 			cells[i].style.backgroundColor = "rgb(205,193,180)";
@@ -523,7 +534,7 @@
 				k=k+1;
 			}
 		}
-		
+		calScore();
 	}
 	
 	function isEnd(){
@@ -581,6 +592,27 @@
 		};
 	}
 	
+	
+	function calScore(){
+		
+		/*for(var i=0;i<cells.length;i++){
+			if(cells[i].innerHTML !==""){
+				iScore = parseInt(cells[i].innerHTML) + iScore;
+			}
+		}*/
+		score.innerHTML = addPreZero(iScore);
+	}
+	function addPreZero(num){
+		 if(num<10){
+		  	return '000'+num;
+		 }else if(num<100){
+		  	return '00'+num;
+		 }else if(num<1000){
+		  	return '0'+num;
+		 }else{
+		  	return num;
+		 }
+	}
 	main();
 })();
 
