@@ -100,12 +100,12 @@
 		},	
 		cell1024:{
 			color:'#FFF',
-			fontSize: '1rem',
+			fontSize: '0.8rem',
 			backColor:"#fcc731"
 		},
 		cell2048:{
 			color:'#FFF',
-			fontSize: '1rem',
+			fontSize: '0.8rem',
 			backColor: "yellow"
 		},
 	}
@@ -177,7 +177,6 @@
 		document.addEventListener("touchstart",function(e){
 	 		startX = e.targetTouches[0].pageX;
 			startY = e.targetTouches[0].pageY;
-	 		console.log(e);
 	 		
 		},false);
 		document.addEventListener("touchmove",function(e){
@@ -204,7 +203,7 @@
 			if(play){
 				rules(code);
 			}
-			
+			isEnd();
 		},false);
 	}
 	
